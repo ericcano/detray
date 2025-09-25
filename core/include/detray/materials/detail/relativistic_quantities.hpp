@@ -52,8 +52,8 @@ struct relativistic_quantities {
                                                const scalar_type qOverP,
                                                const scalar_type q)
         : m_qOverP{qOverP},
-          // beta²/q² = (p/E)²/q² = p²/(q²m² + q²p²) = 1/(q² + (m²(q/p)²)
-          // q²/beta² = q² + m²(q/p)²
+          // betaXX/qXX = (p/E)XX/qXX = pXX/(qXXmXX + qXXpXX) = 1/(qXX + (mXX(q/p)XX)
+          // qXX/betaXX = qXX + mXX(q/p)XX
           m_q2OverBeta2{q * q + (mass * qOverP) * (mass * qOverP)} {
 
         assert(m_qOverP != 0.f);
@@ -63,12 +63,12 @@ struct relativistic_quantities {
         const scalar_type mOverP{
             mass * ((q != 0.f) ? math::fabs(qOverP / q) : math::fabs(qOverP))};
         const scalar_type pOverM{1.f / mOverP};
-        // beta² = p²/E² = p²/(m² + p²) = 1/(1 + (m/p)²)
+        // betaXX = pXX/EXX = pXX/(mXX + pXX) = 1/(1 + (m/p)XX)
         m_beta2 = 1.f / (1.f + mOverP * mOverP);
         m_beta = math::sqrt(m_beta2);
-        // beta*gamma = (p/sqrt(m² + p²))*(sqrt(m² + p²)/m) = p/m
+        // beta*gamma = (p/sqrt(mXX + pXX))*(sqrt(mXX + pXX)/m) = p/m
         m_betaGamma = pOverM;
-        // gamma = sqrt(m² + p²)/m = sqrt(1 + (p/m)²)
+        // gamma = sqrt(mXX + pXX)/m = sqrt(1 + (p/m)XX)
         m_gamma = math::sqrt(1.f + pOverM * pOverM);
         m_gamma2 = m_gamma * m_gamma;
         // E = gamma * mass;
@@ -82,7 +82,7 @@ struct relativistic_quantities {
             (1.f + 2.f * m_gamma * mfrac + mfrac * mfrac);
     }
 
-    /// @return 2 * mass * (beta * gamma)² mass term.
+    /// @return 2 * mass * (beta * gamma)XX mass term.
     DETRAY_HOST_DEVICE constexpr scalar_type compute_mass_term(
         const scalar_type mass) const {
         return 2.f * mass * m_betaGamma * m_betaGamma;

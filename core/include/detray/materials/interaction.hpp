@@ -230,12 +230,12 @@ struct interaction {
         const scalar_type sigmaE{
             compute_energy_loss_landau_sigma(path_segment, mat, ptc, rq)};
 
-        //  var(q/p) = (d(q/p)/dE)² * var(E)
-        // d(q/p)/dE = d/dE (q/sqrt(E²-m²))
-        //           = q * -(1/2) * 1/p³ * 2E
-        //  var(q/p) = (q/p)^4 * (q/beta)² * (1/q)^4 * var(E)
-        //           = -q/p² E/p = -(q/p)² * 1/(q*beta) = -(q/p)² * (q/beta)
-        //           / q² = (1/p)^4 * (q/beta)² * var(E)
+        //  var(q/p) = (d(q/p)/dE)XX * var(E)
+        // d(q/p)/dE = d/dE (q/sqrt(EXX-mXX))
+        //           = q * -(1/2) * 1/pXX * 2E
+        //  var(q/p) = (q/p)^4 * (q/beta)XX * (1/q)^4 * var(E)
+        //           = -q/pXX E/p = -(q/p)XX * 1/(q*beta) = -(q/p)XX * (q/beta)
+        //           / qXX = (1/p)^4 * (q/beta)XX * var(E)
         // do not need to care about the sign since it is only used squared
         const scalar_type pInv{rq.m_qOverP / ptc.charge()};
         return math::sqrt(rq.m_q2OverBeta2) * pInv * pInv * sigmaE;
@@ -247,7 +247,7 @@ struct interaction {
 
         // 1/p = q/(pq) = (q/p)/q
         const scalar_type momentumInv{math::fabs(rq.m_qOverP / ptc.charge())};
-        // q²/beta²; a smart compiler should be able to remove the unused
+        // qXX/betaXX; a smart compiler should be able to remove the unused
         // computations
 
         // if electron or positron
@@ -271,9 +271,9 @@ struct interaction {
             return 0.f;
         }
 
-        // RPP2018 eq. 33.15 (treats beta and q² consistenly)
+        // RPP2018 eq. 33.15 (treats beta and qXX consistenly)
         const scalar_type t{math::sqrt(xOverX0 * q2OverBeta2)};
-        // log((x/X0) * (q²/beta²)) = log((sqrt(x/X0) * (q/beta))²)
+        // log((x/X0) * (qXX/betaXX)) = log((sqrt(x/X0) * (q/beta))XX)
         //                          = 2 * log(sqrt(x/X0) * (q/beta))
         return 13.6f * unit<scalar_type>::MeV * momentumInv * t *
                (1.0f + 0.038f * 2.f * math::log(t));
